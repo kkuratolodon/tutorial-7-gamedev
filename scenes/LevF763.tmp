@@ -1,8 +1,8 @@
 [gd_scene load_steps=16 format=3 uid="uid://65h4c0mrp6k7"]
 
+[ext_resource type="PackedScene" path="res://Scenes/Box.tscn" id="1"]
 [ext_resource type="Script" path="res://Scenes/Switch.gd" id="2_683gk"]
 [ext_resource type="PackedScene" uid="uid://cse8w3pn4ik76" path="res://scenes/Player.tscn" id="2_k2wxv"]
-[ext_resource type="PackedScene" uid="uid://ckvihb8trch8c" path="res://scenes/Box.tscn" id="3_vd5di"]
 
 [sub_resource type="StandardMaterial3D" id="3"]
 albedo_color = Color(0.498039, 0.498039, 0.498039, 1)
@@ -14,14 +14,13 @@ size = Vector2(50, 50)
 [sub_resource type="BoxShape3D" id="2"]
 size = Vector3(50, 0, 50)
 
-[sub_resource type="BoxShape3D" id="5"]
-
 [sub_resource type="StandardMaterial3D" id="6"]
-albedo_color = Color(1, 0, 0, 1)
+albedo_color = Color(0.371817, 5.62528e-07, 9.62615e-08, 1)
 
 [sub_resource type="BoxMesh" id="4"]
 material = SubResource("6")
-size = Vector3(1, 1, 0.5)
+
+[sub_resource type="BoxShape3D" id="5"]
 
 [sub_resource type="Animation" id="Animation_0b5le"]
 resource_name = "Interactable"
@@ -85,18 +84,6 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_rsklx"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:mesh:material:albedo_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 0, 0, 1)]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_m4xtb"]
 _data = {
@@ -135,37 +122,36 @@ mesh = SubResource("1")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2/StaticBody3D"]
 shape = SubResource("2")
 
+[node name="Box" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.97242, 1.41444, 0)
+
+[node name="Box3" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.97242, 1.41444, -3.342)
+
+[node name="Box2" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.97242, 1.41444, 3.30037)
+
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25.7144, 0.0330887)
 light_energy = 10.0
 omni_range = 50.0
 omni_attenuation = 0.5
 
-[node name="StaticBody3D3" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.408357, 3, 25.0375)
-script = ExtResource("2_683gk")
-light = NodePath("../OmniLight3D")
-item_name = "Switch"
-item_description = "Buat Nyalain Lampu"
-can_be_picked_up = true
+[node name="Switch" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 25.0375)
+mesh = SubResource("4")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D3"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Switch"]
+script = ExtResource("2_683gk")
+light = NodePath("../../OmniLight3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Switch/StaticBody3D"]
 shape = SubResource("5")
 
-[node name="Switch" type="MeshInstance3D" parent="StaticBody3D3"]
-mesh = SubResource("4")
-skeleton = NodePath("../..")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="StaticBody3D3"]
-root_node = NodePath("../Switch")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Switch"]
 libraries = {
 "": SubResource("AnimationLibrary_m4xtb")
 }
 autoplay = "Pressed"
 
-[node name="Box4" parent="." instance=ExtResource("3_vd5di")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.05858, 0.780024, 0)
-text = "Level 1"
-
 [node name="Player" parent="." instance=ExtResource("2_k2wxv")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -14.9845, 2.48349, -0.0688586)
